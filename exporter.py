@@ -1,6 +1,4 @@
 import time, boto3
-
-# https://stackoverflow.com/questions/59954984/prometheus-python-exporter-for-json-values
 from prometheus_client import start_http_server
 from prometheus_client.core import REGISTRY, GaugeMetricFamily
 
@@ -17,7 +15,6 @@ class AWSCollector(object):
                 svalue = metrics['StateValue']
                 sdesc = metrics['StateReason']
                 sns = metrics['Namespace']
-                # status_value.info({'status_value': svalue, 'status_desc': sdesc, 'cw_namespace': sns})
                 metric = GaugeMetricFamily("aws_alarms", 'Help text', labels=['status','description','namespace'])
                 metric.add_metric([str(svalue),str(sdesc), str(sns)], 1 )
                 yield metric
