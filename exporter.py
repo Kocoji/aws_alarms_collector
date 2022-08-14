@@ -8,7 +8,6 @@ class AWSCollector(object):
 
     def collect(self):
         cloudwatch = boto3.client('cloudwatch')
-        # List metrics through the pagination interface
         paginator = cloudwatch.get_paginator('describe_alarms')
         for response in paginator.paginate(StateValue='ALARM'):
             for metrics in response['MetricAlarms']:
