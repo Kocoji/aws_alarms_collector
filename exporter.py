@@ -12,12 +12,13 @@ class AWSCollector(object):
         for response in paginator.paginate(StateValue='ALARM'):
             for metrics in response['MetricAlarms']:
                 svalue = metrics['StateValue']
+                alert_name = metrics['AlarmName']
                 sdesc = metrics['StateReason']
                 sns = metrics['Namespace']
-                metric = GaugeMetricFamily("aws_alarms", 'Get the CW alarm', labels=['status','description','namespace'])
-                metric.add_metric([str(svalue),str(sdesc), str(sns)], 1 )
-                alerts = GaugeMetricFamily("ALERTS", 'Help text', labels=['status','alertstate','namespace'])
-                alerts.add_metric([str(svalue),"firing", str(sns)], 1 )
+                metric = GaugeMetricFamily("aws_alarms", 'Get the CW alarm', labels=['alarm_name','status','description','namespace'])
+                alerts = GaugeMetricFamily("ALERTS", 'Alt metric name used in alert', labels=['alarm_name','status','alertstate','namespace'])
+                metric.add_metric([str(alert_name), str(svalue),str(sdesc), str(sns)], 1 )
+                alerts.add_metric([str(alert_name), str(svalue),"firing", str(sns)], 1 )
                 yield metric
                 yield alerts
 
