@@ -14,9 +14,12 @@ class AWSCollector(object):
                 svalue = metrics['StateValue']
                 sdesc = metrics['StateReason']
                 sns = metrics['Namespace']
-                metric = GaugeMetricFamily("aws_alarms", 'Help text', labels=['status','description','namespace'])
+                metric = GaugeMetricFamily("aws_alarms", 'Get the CW alarm', labels=['status','description','namespace'])
                 metric.add_metric([str(svalue),str(sdesc), str(sns)], 1 )
+                alerts = GaugeMetricFamily("ALERTS", 'Help text', labels=['status','alertstate','namespace'])
+                alerts.add_metric([str(svalue),"firing", str(sns)], 1 )
                 yield metric
+                yield alerts
 
 def main():
     start_http_server(8899)
